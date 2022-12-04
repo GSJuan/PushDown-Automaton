@@ -19,7 +19,13 @@ class Automaton {
     std::vector<Transition> transitions;
     std::vector<int> finalStates;
 
-  public:
+    bool trace = false;
 
+  public:
+    void loadAutomaton(std::istream &in);
+    bool checkWord(std::string word);
+    void printAutomaton();
+    void setTrace(bool trace);
+    
 };
 #endif
