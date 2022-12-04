@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/home/ercos/PushDown-Automaton-/build",
-  "command": "/usr/bin/g++    -g   -o CMakeFiles/PushDown-Automaton.dir/main.cpp.o -c /home/ercos/PushDown-Automaton-/main.cpp",
-  "file": "/home/ercos/PushDown-Automaton-/main.cpp"
-}
-]
