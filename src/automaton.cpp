@@ -81,8 +81,33 @@ bool Automaton::checkWord(std::string word) {
   return false;
 }
 
-void Automaton::printAutomaton(){
+std::ostream& Automaton::write(std::ostream& os) {
+  os << "States: ";
+  for(auto state : states) {
+    os << state << " ";
+  }
+  os << std::endl;
 
+  os << "Alphabet: ";
+  for(auto symbol : alphabet) {
+    os << symbol << " ";
+  }
+  os << std::endl;
+
+  os<< "Stack Alphabet: ";
+  for(auto symbol : stackAlphabet) {
+    os << symbol << " ";
+  }
+  os << std::endl;
+
+  os << "Initial State: " << initialState << std::endl;
+  os << "Initial Stack Symbol: " << initialStackSymbol << std::endl;
+
+  os << "Transitions: " << std::endl;
+  for(auto transition : transitions) {
+    os << transition << std::endl;
+  }
+  return os;
 }
 
 void Automaton::setTrace(bool value){

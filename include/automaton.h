@@ -4,7 +4,6 @@
 #define AUTOMATON_H
 
 #include "transition.h"
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <stack>
@@ -28,20 +27,20 @@ class Automaton {
     void loadAutomaton(std::ifstream &in);
     void checkAutomaton();
     bool checkWord(std::string word);
-    void printAutomaton();
+    std::ostream& write(std::ostream& os);
     void setTrace(bool trace);
 
     Automaton () {};
     ~Automaton () {};
 
-    Automaton (std::ifstream &in) {
-      if(!in.is_open()) {
+    Automaton (std::ifstream &file) {
+      if(!file.is_open()) {
         std::cerr << "Error opening file " << std::endl;
         exit(1);
       }
 
-      this->loadAutomaton(in);
-      in.close();
+      this->loadAutomaton(file);
+      file.close();
       this->checkAutomaton();
     };
 
