@@ -164,19 +164,45 @@ bool Automaton::checkWord(std::string word, int wordIndex) {
   
   if(stack->empty()) {
     if(wordIndex == word.length()) {
+      if(trace) {
+        std::cout << "Stack is empty and input is also empty" << std::endl;
+      }
       return true;
+    }
+    if(trace) {
+        std::cout << "Stack is empty" << std::endl;
     }
     return false;
   }
 
   std::string symbol(1, word[wordIndex]);
   std::string currentStackSymbol = stack->top();
+  
+  //checkear esto no se si deberia ser asi
+  if(wordIndex == word.length()) {
+    symbol = ".";
+  }
+
   std::vector<Transition> possibleTransitions = getPossibleTransitions(currentState, symbol, currentStackSymbol);
+  
+  if(trace) {
+    std::cout << std::endl << "Current state: " << currentState << std::endl;
+    std::cout << "Stack top symbol: " << currentStackSymbol << std::endl;
+    std::cout << "Current input symbol: " << symbol  << " in position " << wordIndex+1 << std::endl;
+    std::cout << "Possible transitions: " << std::endl;
+    for(int i = 0; i < possibleTransitions.size(); i++) {
+      std::cout << "\t" << possibleTransitions[i] << std::endl;
+    }
+  }
 
   for(int i = 0; i < possibleTransitions.size(); i++) {
     Transition transition = possibleTransitions[i];
     std::string nextState = transition.toState;
     std::string pushSymbols = transition.push;
+
+    if(trace) {
+      std::cout << std::endl << "Trying transition " << transition << std::endl;
+    }
 
     currentState = nextState;
     stack->pop();
@@ -197,6 +223,10 @@ bool Automaton::checkWord(std::string word, int wordIndex) {
       }
     }
 
+    if(trace) {
+      std::cout << "Backtracking" << std::endl;
+    }
+
     currentState = transition.fromState;
     for(int j = 0; j < pushSymbolsVector.size(); j++) {
       if(pushSymbolsVector[j] != ".") {
@@ -205,6 +235,11 @@ bool Automaton::checkWord(std::string word, int wordIndex) {
     }
     stack->push(transition.pop);
   }
+
+  if(trace) {
+    std::cout << "No possible transitions left " << std::endl;
+  }
+
   return false;
 }
 

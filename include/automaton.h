@@ -38,7 +38,10 @@ class Automaton {
 
     //automaton execution
     std::vector<Transition> getPossibleTransitions(std::string state, std::string input, std::string stackSymbol);
-    bool checkWord(std::string word, int wordIndex);    
+    bool checkWord(std::string word, int wordIndex); 
+    bool checkWord(std::string word) {
+      return checkWord(word, 0);
+    }   
 
     //automaton miscellaneous
     std::ostream& write(std::ostream& os);
