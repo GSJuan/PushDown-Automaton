@@ -9,13 +9,14 @@
 #include <sstream>
 #include <stack>
 #include <vector>
+#include <unordered_set>
 
 class Automaton {
 
   private:
-    std::vector<std::string> alphabet;
-    std::vector<std::string> states;
-    std::vector<std::string> stackAlphabet;
+    std::unordered_set <std::string> alphabet;
+    std::unordered_set <std::string> states;
+    std::unordered_set <std::string> stackAlphabet;
     std::string initialState;
     std::string initialStackSymbol;
     std::vector<Transition> transitions;
@@ -25,6 +26,7 @@ class Automaton {
 
   public:
     void loadAutomaton(std::ifstream &in);
+    void checkAutomaton();
     bool checkWord(std::string word);
     void printAutomaton();
     void setTrace(bool trace);
@@ -33,24 +35,26 @@ class Automaton {
     ~Automaton () {};
 
     Automaton (std::ifstream &in) {
-      if(in.is_open()) {
-        this->loadAutomaton(in);
-        in.close();
+      if(!in.is_open()) {
+        std::cerr << "Error opening file " << std::endl;
+        exit(1);
       }
-      else {
-        std::cout << "Error opening file " << std::endl;
-      }
+
+      this->loadAutomaton(in);
+      in.close();
+      this->checkAutomaton();
     };
 
     Automaton(std::string filename) {
       std::ifstream file(filename, std::ios::in);
-      if(file.is_open()) {
-       this->loadAutomaton(file);
-       file.close();
+      if(!file.is_open()) {
+        std::cerr << "Error opening file " << filename << std::endl;
+        exit(1);
       }
-      else {
-        std::cout << "Error opening file " << filename << std::endl;
-      }
+
+      this->loadAutomaton(file);
+      file.close();
+      this->checkAutomaton();
     };
     
 };
