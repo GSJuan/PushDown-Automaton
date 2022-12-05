@@ -17,8 +17,9 @@ cmake --build build --config Debug --target all --
 ```
 
 NOTA: Si se quisiera añadir otro fichero de definicion de automata para probar, se debe arrastrar a la carpeta 'test'.
-Una vez hecho eso, simplemente ejecute el programa dandole el nombre del archivo como parámetro usando la opción -f
-El programa está codificado para que las rutas de los archivos de definición de autómatas esten fijados a ese directorio. Por ello, es necesario que el archivo se encuentre en el directorio y solo pase como argumento el nombre del mismo, no su ruta.
+Una vez hecho eso, simplemente ejecute el programa dandole el nombre del archivo como parámetro usando la opción -f <nombre de fichero>.
+El programa está codificado para que las rutas de los archivos de definición de autómatas esten fijados a ese directorio.
+Por ello, es necesario que el archivo se encuentre en el directorio y solo pase como argumento el nombre del mismo, no su ruta.
 
 Códigos de error:
   1 - Error en la apertura de archivo de definición de autómata
