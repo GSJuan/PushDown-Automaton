@@ -17,44 +17,39 @@ class Automaton {
     std::unordered_set <std::string> states;
     std::unordered_set <std::string> stackAlphabet;
     std::string initialState;
+    std::string currentState;
     std::string initialStackSymbol;
     std::vector<Transition> transitions;
-    //std::vector<std::string> finalStates;
 
+    std::stack<std::string> *stack;
     bool trace = false;
 
   public:
+
+    //automaton memory management
     void loadAutomaton(std::ifstream &in);
     void checkAutomaton();
-    bool checkWord(std::string word);
+    void initializeStack();
+
+    void initialize() {
+      initializeStack();
+      currentState = initialState;
+    }
+
+    //automaton execution
+    std::vector<Transition> getPossibleTransitions(std::string state, std::string input, std::string stackSymbol);
+    bool checkWord(std::string word, int wordIndex);    
+
+    //automaton miscellaneous
     std::ostream& write(std::ostream& os);
     void setTrace(bool trace);
 
+    //Constructors
     Automaton () {};
-    ~Automaton () {};
+    Automaton (std::ifstream &file);
+    Automaton(std::string filename);
 
-    Automaton (std::ifstream &file) {
-      if(!file.is_open()) {
-        std::cerr << "Error opening file " << std::endl;
-        exit(1);
-      }
-
-      this->loadAutomaton(file);
-      file.close();
-      this->checkAutomaton();
-    };
-
-    Automaton(std::string filename) {
-      std::ifstream file(filename, std::ios::in);
-      if(!file.is_open()) {
-        std::cerr << "Error opening file " << filename << std::endl;
-        exit(1);
-      }
-
-      this->loadAutomaton(file);
-      file.close();
-      this->checkAutomaton();
-    };
-    
+    //Destructor
+    ~Automaton () {};  
 };
 #endif

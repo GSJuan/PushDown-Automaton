@@ -2,10 +2,14 @@
 #include "automaton.h"
 int main() {
   std::string path = TEST_RESOURCE_DIR;
-  path += "APv-3.txt";
+  path += "APv.txt";
   Automaton automaton(path);
 
-  automaton.write(std::cout);
+  if(automaton.checkWord("ab", 0)) {
+    std::cout << "Accepted" << std::endl;
+  } else {
+    std::cout << "Rejected" << std::endl;
+  }
 
   return 0;
 }

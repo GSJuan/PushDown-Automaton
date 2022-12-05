@@ -1,5 +1,6 @@
 # Automata por vaciado de pila 
 # epsilon esta representado por un .
+# Cadenas del tipo a^n b^n (creo)
 q0
 a b
 a b S B

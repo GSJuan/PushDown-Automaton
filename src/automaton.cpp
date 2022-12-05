@@ -9,7 +9,6 @@ std::vector<std::string> vectorSplit(std::string str, char delimiter) {
   while(std::getline(iss, tok, delimiter)) {
     internal.push_back(tok);
   }
-  
   return internal;
 }
 
@@ -22,9 +21,34 @@ std::unordered_set<std::string> ustSplit(std::string str, char delimiter) {
   while(std::getline(iss, tok, delimiter)) {
     internal.insert(tok);
   }
-  
   return internal;
 }
+
+Automaton::Automaton (std::ifstream &file) {
+  if(!file.is_open()) {
+    std::cerr << "Error opening file " << std::endl;
+    exit(1);
+  }
+
+  this->loadAutomaton(file);
+  file.close();
+  this->checkAutomaton();
+
+  this->initialize();
+  };
+
+Automaton::Automaton(std::string filename) {
+  std::ifstream file(filename, std::ios::in);
+  if(!file.is_open()) {
+    std::cerr << "Error opening file " << filename << std::endl;
+    exit(1);
+  }
+
+  this->loadAutomaton(file);
+  file.close();
+  this->checkAutomaton();
+  this->initialize();
+};
 
 void Automaton::loadAutomaton(std::ifstream &in) {
   //eliminate initial comments
@@ -41,13 +65,11 @@ void Automaton::loadAutomaton(std::ifstream &in) {
   std::getline(in, line);
   line = line.substr(0, line.find('#'));
   alphabet = ustSplit(line, ' ');
-  alphabet.insert(".");
 
   // read stack alphabet
   std::getline(in, line);
   line = line.substr(0, line.find('#'));
   stackAlphabet = ustSplit(line, ' ');
-  stackAlphabet.insert(".");
 
   // read initial state
   std::getline(in, line);
@@ -75,43 +97,6 @@ void Automaton::loadAutomaton(std::ifstream &in) {
     
     transitions.push_back(Transition(state, symbol, stackSymbol, nextState, stackSymbols));
   }
-}
-
-bool Automaton::checkWord(std::string word) {
-  return false;
-}
-
-std::ostream& Automaton::write(std::ostream& os) {
-  os << "States: ";
-  for(auto state : states) {
-    os << state << " ";
-  }
-  os << std::endl;
-
-  os << "Alphabet: ";
-  for(auto symbol : alphabet) {
-    os << symbol << " ";
-  }
-  os << std::endl;
-
-  os<< "Stack Alphabet: ";
-  for(auto symbol : stackAlphabet) {
-    os << symbol << " ";
-  }
-  os << std::endl;
-
-  os << "Initial State: " << initialState << std::endl;
-  os << "Initial Stack Symbol: " << initialStackSymbol << std::endl;
-
-  os << "Transitions: " << std::endl;
-  for(auto transition : transitions) {
-    os << transition << std::endl;
-  }
-  return os;
-}
-
-void Automaton::setTrace(bool value){
-  trace = value;
 }
 
 void Automaton::checkAutomaton() {
@@ -148,7 +133,7 @@ void Automaton::checkAutomaton() {
     }
 
     //check if input is in alphabet
-    if(alphabet.find(input) == alphabet.end()) {
+    if(alphabet.find(input) == alphabet.end() && input != ".") {
       std::cerr << "Transition " << i << " has input " << input << " which is not in alphabet" << std::endl;
       exit(2);
     }
@@ -162,10 +147,106 @@ void Automaton::checkAutomaton() {
     //check if push is in stack alphabet
     std::vector<std::string> pushSymbols = vectorSplit(push, ' ');
     for(int j = 0; j < pushSymbols.size(); j++) {
-      if(stackAlphabet.find(pushSymbols[j]) == stackAlphabet.end()) {
+      if(stackAlphabet.find(pushSymbols[j]) == stackAlphabet.end() && pushSymbols[j] != ".") {
         std::cerr << "Transition " << i << " has push " << pushSymbols[j] << " which is not in stack alphabet" << std::endl;
         exit(2);
       }
     }
   }
+}
+
+void Automaton::initializeStack() {
+  stack = new std::stack<std::string>();
+  stack->push(initialStackSymbol);
+}
+
+bool Automaton::checkWord(std::string word, int wordIndex) {
+  
+  if(stack->empty()) {
+    if(wordIndex == word.length()) {
+      return true;
+    }
+    return false;
+  }
+
+  std::string symbol(1, word[wordIndex]);
+  std::string currentStackSymbol = stack->top();
+  std::vector<Transition> possibleTransitions = getPossibleTransitions(currentState, symbol, currentStackSymbol);
+
+  for(int i = 0; i < possibleTransitions.size(); i++) {
+    Transition transition = possibleTransitions[i];
+    std::string nextState = transition.toState;
+    std::string pushSymbols = transition.push;
+
+    currentState = nextState;
+    stack->pop();
+    std::vector<std::string> pushSymbolsVector = vectorSplit(pushSymbols, ' ');
+    for(int j = pushSymbolsVector.size() - 1; j >= 0; j--) {
+      if(pushSymbolsVector[j] != ".") {
+        stack->push(pushSymbolsVector[j]);
+      }
+    }
+    
+    if(transition.input == ".") {
+      if(checkWord(word, wordIndex)) {
+        return true;
+      }
+    } else {
+      if(checkWord(word, wordIndex + 1)) {
+        return true;
+      }
+    }
+
+    currentState = transition.fromState;
+    for(int j = 0; j < pushSymbolsVector.size(); j++) {
+      if(pushSymbolsVector[j] != ".") {
+        stack->pop();
+      }
+    }
+    stack->push(transition.pop);
+  }
+  return false;
+}
+
+std::ostream& Automaton::write(std::ostream& os) {
+  os << "States: ";
+  for(auto state : states) {
+    os << state << " ";
+  }
+  os << std::endl;
+
+  os << "Alphabet: ";
+  for(auto symbol : alphabet) {
+    os << symbol << " ";
+  }
+  os << std::endl;
+
+  os<< "Stack Alphabet: ";
+  for(auto symbol : stackAlphabet) {
+    os << symbol << " ";
+  }
+  os << std::endl;
+
+  os << "Initial State: " << initialState << std::endl;
+  os << "Initial Stack Symbol: " << initialStackSymbol << std::endl;
+
+  os << "Transitions: " << std::endl;
+  for(auto transition : transitions) {
+    os << transition << std::endl;
+  }
+  return os;
+}
+
+void Automaton::setTrace(bool value){
+  trace = value;
+}
+
+std::vector<Transition> Automaton::getPossibleTransitions(std::string state, std::string input, std::string stackSymbol) {
+  std::vector<Transition> possibleTransitions;
+  for(int i = 0; i < transitions.size(); i++) {
+    if(transitions[i].fromState == state && transitions[i].pop == stackSymbol && (transitions[i].input == input || transitions[i].input == ".")) {
+      possibleTransitions.push_back(transitions[i]);
+    }
+  }
+  return possibleTransitions;
 }
