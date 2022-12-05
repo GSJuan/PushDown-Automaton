@@ -22,8 +22,8 @@ El programa está codificado para que las rutas de los archivos de definición d
 Por ello, es necesario que el archivo se encuentre en el directorio y solo pase como argumento el nombre del mismo, no su ruta.
 
 Códigos de error:
-  1 - Error en la apertura de archivo de definición de autómata
-  2 - Autómata definido incorrectamente
+ + 1 - Error en la apertura de archivo de definición de autómata
+ + 2 - Autómata definido incorrectamente
 
 ### English:
 Empty stack PushDown automaton simulator in C++
@@ -45,5 +45,5 @@ Once you´ve done that, simply execute the program giving the file name as a par
 The program is coded to accept only names of files inside the test folder.
 
 Error codes:
-  1 - Error opening automaton definition file
-  2 - Automaton not defined correctly 
+ + 1 - Error opening automaton definition file
+ + 2 - Automaton not defined correctly 
