@@ -16,8 +16,8 @@ cmake --build build --config Debug --target all --
 ./build/PushDown-Automaton -f APv-3.txt -t
 ```
 
-NOTA: Si se quisiera añadir otro fichero de definicion de automata para probar, se debe arrastrar a la carpeta 'test'
-Una vez hecho eso, simplemente ejecute el programa dandole el no,bre del archivo como parámetro usando la opción -f
+NOTA: Si se quisiera añadir otro fichero de definicion de automata para probar, se debe arrastrar a la carpeta 'test'.
+Una vez hecho eso, simplemente ejecute el programa dandole el nombre del archivo como parámetro usando la opción -f
 El programa está codificado para que las rutas de los archivos de definición de autómatas esten fijados a ese directorio. Por ello, es necesario que el archivo se encuentre en el directorio y solo pase como argumento el nombre del mismo, no su ruta.
 
 Códigos de error:
