@@ -1,4 +1,15 @@
-//class declaration for a push down automaton
+/**
+ * @file automaton.h
+ * @author Juan García Santos (alu0101325583@ull.edu.es)
+ * @brief class declaration for a push down automaton
+ * @version 0.1
+ * @date 2022-05-12
+ * SUBJECT: CC
+ * PRACTICE: 1
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 
 #ifndef AUTOMATON_H
 #define AUTOMATON_H
@@ -16,6 +27,7 @@ class Automaton {
     std::unordered_set <std::string> alphabet;
     std::unordered_set <std::string> states;
     std::unordered_set <std::string> stackAlphabet;
+
     std::string initialState;
     std::string currentState;
     std::string initialStackSymbol;
@@ -30,7 +42,6 @@ class Automaton {
     void loadAutomaton(std::ifstream &in);
     void checkAutomaton();
     void initializeStack();
-
     void initialize() {
       initializeStack();
       currentState = initialState;

@@ -1,19 +1,22 @@
 # PushDown-Automaton
 ## Autor: Juan García Santos alu0101325583 
 ### Español:
-Simulador de autómata por vaciado de pila
+Simulador de autómata de pila con finalización por vaciado de pila (APv)
 
-Comando de compilación:
+Requisitos: Tener instalado y actualizado cmake y gdb
+
+- Comandos de compilación (ejecutados desde el directorio en el que se encuentra este README):
 ```bash
+cmake -B build
 cmake --build build --config Debug --target all --
 ```
 
-Comando de ejecución de ejemplo
+- Comando de ejecución de ejemplo
 ```bash
 ./build/PushDown-Automaton -f APv-3.txt -t
 ```
 
-Nota: Si se quisiera añadir otro fichero de definicion de automata para probar, se debe arrastrar a la carpeta 'test'
+NOTA: Si se quisiera añadir otro fichero de definicion de automata para probar, se debe arrastrar a la carpeta 'test'
 Una vez hecho eso, simplemente ejecute el programa dandole el no,bre del archivo como parámetro usando la opción -f
 El programa está codificado para que las rutas de los archivos de definición de autómatas esten fijados a ese directorio. Por ello, es necesario que el archivo se encuentre en el directorio y solo pase como argumento el nombre del mismo, no su ruta.
 
@@ -24,7 +27,9 @@ Códigos de error:
 ### English:
 Empty stack PushDown automaton simulator in C++
 
-Compilation command:
+Prequisites: having cmkae and gdb installed and updated
+
+Compilation command (executed inside the directory where this README is located):
 ```bash
 cmake --build build --config Debug --target all --
 ```

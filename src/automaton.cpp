@@ -1,6 +1,20 @@
+/**
+ * @file automaton.h
+ * @author Juan García Santos (alu0101325583@ull.edu.es)
+ * @brief class definition for a push down automaton
+ * @version 0.1
+ * @date 2022-05-12
+ * SUBJECT: CC
+ * PRACTICE: 1
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include "automaton.h"
 
-//Give a string, return a vector of strings with the symbols of the string separated
+// Helper
+// Given a string, return a vector of strings with the symbols of the string separated by the given delimiter
 std::vector<std::string> vectorSplit(std::string str, char delimiter) {
   std::vector<std::string> internal;
   std::istringstream iss(str); // Turn the string into a stream.
@@ -12,7 +26,8 @@ std::vector<std::string> vectorSplit(std::string str, char delimiter) {
   return internal;
 }
 
-//Given a string, return an unordered set with the symbols of the string separated
+// Helper
+// Given a string, return an unordered set with the symbols of the string separated by the given delimiter
 std::unordered_set<std::string> ustSplit(std::string str, char delimiter) {
   std::unordered_set<std::string> internal;
   std::istringstream iss(str); // Turn the string into a stream.
@@ -33,9 +48,8 @@ Automaton::Automaton (std::ifstream &file) {
   this->loadAutomaton(file);
   file.close();
   this->checkAutomaton();
-
   this->initialize();
-  };
+};
 
 Automaton::Automaton(std::string filename) {
   std::ifstream file(filename, std::ios::in);
@@ -50,15 +64,16 @@ Automaton::Automaton(std::string filename) {
   this->initialize();
 };
 
+// Load the automaton from input file stream 
 void Automaton::loadAutomaton(std::ifstream &in) {
-  //eliminate initial comments
+  // eliminate initial comments
   std::string line;
   do {
     std::getline(in, line);
     line = line.substr(0, line.find('#'));
   } while(line == "");
   
-  //read states
+  // read states
   states = ustSplit(line, ' ');
 
   // read alphabet
@@ -81,6 +96,7 @@ void Automaton::loadAutomaton(std::ifstream &in) {
   line = line.substr(0, line.find('#'));
   initialStackSymbol = line;
 
+  // read transitions
   while(std::getline(in, line)) {
     line = line.substr(0, line.find('#'));
     if(line == "") continue;
@@ -89,30 +105,31 @@ void Automaton::loadAutomaton(std::ifstream &in) {
     std::string symbol = parts[1];
     std::string stackSymbol = parts[2];
     std::string nextState = parts[3];
-    std::string stackSymbols = parts[4];
 
+    std::string stackSymbols2Push = parts[4];
     for(int i = 5; i < parts.size(); i++) {
-      stackSymbols += " " + parts[i]; //allow multiple stack values
+      stackSymbols2Push += " " + parts[i]; //allow multiple stack push values
     }
     
-    transitions.push_back(Transition(state, symbol, stackSymbol, nextState, stackSymbols));
+    transitions.push_back(Transition(state, symbol, stackSymbol, nextState, stackSymbols2Push));
   }
 }
 
+// Check if the given automaton definition is valid
 void Automaton::checkAutomaton() {
-  //check if initial state is in states 
+  // check if initial state is in states 
   if(states.find(initialState) == states.end()) {
     std::cerr << "Initial state " << initialState << " is not in states" << std::endl;
     exit(2);
   }
 
-  //check if initial stack symbol is in stack alphabet  
+  // check if initial stack symbol is in stack alphabet  
   if(stackAlphabet.find(initialStackSymbol) == stackAlphabet.end()) {
     std::cerr << "Initial stack symbol " << initialStackSymbol << " is not in stack alphabet" << std::endl;
     exit(2);
   }
 
-  //check if all transitions are valid
+  // check if all transitions are valid
   for(int i = 0; i < transitions.size(); i++) {
     std::string fromState = transitions[i].fromState;
     std::string toState = transitions[i].toState;
@@ -120,31 +137,31 @@ void Automaton::checkAutomaton() {
     std::string pop = transitions[i].pop;
     std::string push = transitions[i].push;
 
-    //check if fromState is in states
+    // check if fromState is in states
     if(states.find(fromState) == states.end()) {
       std::cerr << "Transition " << i << " has fromState " << fromState << " which is not in states" << std::endl;
       exit(2);
     }
 
-    //check if toState is in states
+    // check if toState is in states
     if(states.find(toState) == states.end()) {
       std::cerr << "Transition " << i << " has toState " << toState << " which is not in states" << std::endl;
       exit(2);
     }
 
-    //check if input is in alphabet
+    // check if input is in alphabet
     if(alphabet.find(input) == alphabet.end() && input != ".") {
       std::cerr << "Transition " << i << " has input " << input << " which is not in alphabet" << std::endl;
       exit(2);
     }
 
-    //check if pop is in stack alphabet
+    // check if pop is in stack alphabet
     if(stackAlphabet.find(pop) == stackAlphabet.end()) {
       std::cerr << "Transition " << i << " has pop " << pop << " which is not in stack alphabet" << std::endl;
       exit(2);
     }
 
-    //check if push is in stack alphabet
+    // check if push symbols are in stack alphabet
     std::vector<std::string> pushSymbols = vectorSplit(push, ' ');
     for(int j = 0; j < pushSymbols.size(); j++) {
       if(stackAlphabet.find(pushSymbols[j]) == stackAlphabet.end() && pushSymbols[j] != ".") {
@@ -155,13 +172,14 @@ void Automaton::checkAutomaton() {
   }
 }
 
+// Initialize the automaton stack
 void Automaton::initializeStack() {
   stack = new std::stack<std::string>();
   stack->push(initialStackSymbol);
 }
 
+// check recursively if a given word is accepted by the automaton, hence part of the language
 bool Automaton::checkWord(std::string word, int wordIndex) {
-  
   if(stack->empty()) {
     if(wordIndex == word.length()) {
       if(trace) {
@@ -170,7 +188,7 @@ bool Automaton::checkWord(std::string word, int wordIndex) {
       return true;
     }
     if(trace) {
-        std::cout << "Stack is empty" << std::endl;
+        std::cout << "Stack is empty but input is not" << std::endl;
     }
     return false;
   }
