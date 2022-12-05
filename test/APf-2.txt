@@ -1,7 +1,7 @@
 # Automata por estados finales 
 # epsilon esta representado por un .
 # Reconoce el lenguaje L = {ww^R}, donde w^R es la cadena obtenida al invertir el orden de w.
-#	Palabras palindomas de tamaño par
+#	Palabras palindomas de tamano par
 p q r
 0 1
 0 1 S
