@@ -177,11 +177,6 @@ bool Automaton::checkWord(std::string word, int wordIndex) {
 
   std::string symbol(1, word[wordIndex]);
   std::string currentStackSymbol = stack->top();
-  
-  //checkear esto no se si deberia ser asi
-  if(wordIndex == word.length()) {
-    symbol = ".";
-  }
 
   std::vector<Transition> possibleTransitions = getPossibleTransitions(currentState, symbol, currentStackSymbol);
   
