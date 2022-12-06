@@ -4,6 +4,10 @@
 Simulador de autómata de pila con finalización por vaciado de pila (APv)
 
 Requisitos: Tener instalado y actualizado cmake y gdb
+```bash
+sudo apt-get install build-essential gdb
+sudo apt-get install cmake
+```
 
 - Comandos de compilación (ejecutados desde el directorio en el que se encuentra este README):
 ```bash
@@ -29,6 +33,10 @@ Códigos de error:
 Empty stack PushDown automaton simulator in C++
 
 Prequisites: having cmkae and gdb installed and updated
+```bash
+sudo apt-get install build-essential gdb
+sudo apt-get install cmake
+```
 
 Compilation command (executed inside the directory where this README is located):
 ```bash
