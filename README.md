@@ -7,7 +7,7 @@ Requisitos: Tener instalado y actualizado cmake y gdb
 ```bash
 sudo apt-get update
 sudo apt-get install build-essential gdb
-sudo apt-get install cmake
+sudo apt install cmake
 ```
 
 - Comandos de compilación (ejecutados desde el directorio en el que se encuentra este README):
@@ -37,11 +37,12 @@ Prequisites: having cmkae and gdb installed and updated
 ```bash
 sudo apt-get update
 sudo apt-get install build-essential gdb
-sudo apt-get install cmake
+sudo apt install cmake
 ```
 
-Compilation command (executed inside the directory where this README is located):
+Compilation commands (executed inside the directory where this README is located):
 ```bash
+cmake -B build
 cmake --build build --config Debug --target all --
 ```
 
